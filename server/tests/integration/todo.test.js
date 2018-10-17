@@ -33,6 +33,17 @@ describe('/todos', () => {
         });
       });
     });
+
+    it('should delete 1 item in the array', () => {
+      return ToDo.create({
+        subject: 'test',
+      }).then((created) => {
+        return request(app).delete(rootPath+'/'+created.id).expect((response) => {
+          return expect(response.body.delete).toEqual(true);
+        });
+      });
+    });
+
   });
 
   describe('POST /', () => {
@@ -46,6 +57,15 @@ describe('/todos', () => {
         .then((response) => {
           return expect(response.body.subject).toEqual('test');
         });
+    });
+
+    it('should throw error', () => {
+      return request(app)
+        .post('/badRootPath')
+        .send({
+          subject: 'test',
+        })
+        .expect(404);
     });
   });
 });
